@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "cobblemon:friend_ball" },
+    { "item": "cobblemon:love_ball" },
+    { "item": "cobblemon:binding_band" }
+  ],
+  "result": {
+    "id": "deepbond:deep_bond_ball",
+    "count": 1
+  }
+}
