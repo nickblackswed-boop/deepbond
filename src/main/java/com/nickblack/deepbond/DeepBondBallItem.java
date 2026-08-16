@@ -16,15 +16,21 @@ public class DeepBondBallItem extends Item {
         if (!(entity instanceof PokemonEntity pokemonEntity)) return ActionResult.PASS;
         if (player.getWorld().isClient) return ActionResult.SUCCESS;
 
-        // Friendship is an achievement requirement, not an activation requirement.
-        // Activation currently only records that this Pokémon has entered the bond process.
-        if (!pokemonEntity.getPokemon().getOwnerPlayerUUID().isPresent()) {
+        var pokemon = pokemonEntity.getPokemon();
+        if (pokemon.getOwnerPlayer() != player) {
             player.sendMessage(net.minecraft.text.Text.literal("You must own this Pokémon."), true);
             return ActionResult.FAIL;
         }
+        if (BondData.isActive(pokemon)) {
+            player.sendMessage(net.minecraft.text.Text.literal("This Pokémon is already on a bond path."), true);
+            return ActionResult.FAIL;
+        }
 
-        player.sendMessage(net.minecraft.text.Text.literal("Deep Bond process activated. Achievement requirements will now be tracked."), true);
-        stack.decrement(1);
+        // Path eligibility is deliberately kept separate from achievement progress.
+        // The final Deep/Eternal starting requirements will select the path here.
+        BondData.activate(pokemon, "DEEP");
+        player.sendMessage(net.minecraft.text.Text.literal("Deep Bond path activated. Achievement progress has started."), true);
+        if (!player.isCreative()) stack.decrement(1);
         return ActionResult.SUCCESS;
     }
 }
