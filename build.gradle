@@ -1,48 +1,46 @@
 plugins {
-    id 'fabric-loom' version "${loom_version}"
+    id 'fabric-loom' version '1.8-SNAPSHOT'
     id 'maven-publish'
 }
 
 version = project.mod_version
-group = project.group
-
-base {
-    archivesName = 'deepbond'
-}
+archivesBaseName = "${project.archives_base_name}-fabric-mc${project.minecraft_version}"
+group = project.maven_group
 
 repositories {
-    maven { name = 'Cobblemon'; url = 'https://maven.impactdev.net/repository/development/' }
+    mavenCentral()
+    maven { url = "https://maven.impactdev.net/repository/development/" }
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
-    modImplementation "com.cobblemon:mod:${cobblemon_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "com.cobblemon:fabric:${project.cobblemon_version}"
+    modImplementation "net.fabricmc:fabric-language-kotlin:1.13.6+kotlin.2.2.20"
 }
 
 processResources {
-    inputs.property 'version', project.version
-    filesMatching('fabric.mod.json') { expand 'version': project.version }
-}
-
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.release = 21
+    it.options.release = 21
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
-    from('LICENSE') { rename { "${it}_${base.archivesName.get()}" } }
-}
-
-publishing {
-    publications {
-        create('mavenJava', MavenPublication) {
-            from components.java
-        }
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }
