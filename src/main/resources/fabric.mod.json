@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "deepbond",
+  "version": "${version}",
+  "name": "Cobblemon Deep Bond",
+  "description": "A permanent trainer-Pokemon bond system for Cobblemon.",
+  "authors": ["Nick Black"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.nickblack.deepbond.DeepBondMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": ">=0.108.0",
+    "cobblemon": ">=1.7.3"
+  }
+}
