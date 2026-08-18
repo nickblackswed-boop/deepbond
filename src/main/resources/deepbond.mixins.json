@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.nickblack.deepbond.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "PokemonEntityMixin",
+    "PokemonStatMixin",
+    "PlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
