@@ -30,7 +30,7 @@ public final class BondData {
     public static boolean isAchieved(Pokemon pokemon) { return data(pokemon).getBoolean(ACHIEVED); }
 
     public static boolean canBeEternal(Pokemon pokemon) {
-        return pokemon.evolutions.iterator().hasNext();
+        return pokemon.getEvolutions().iterator().hasNext();
     }
 
     public static void activate(Pokemon pokemon) {
@@ -40,13 +40,13 @@ public final class BondData {
         d.putInt(DEFEATED, 0);
         d.putInt(DAYS_OUT, 0);
         d.putLong(LAST_DAY, -1L);
-        d.putBoolean(FRIENDSHIP_DONE, pokemon.friendship >= 255);
+        d.putBoolean(FRIENDSHIP_DONE, pokemon.getFriendship() >= 255);
         d.putBoolean(ACHIEVED, false);
         pokemon.onChange();
     }
 
     public static void tickOut(Pokemon pokemon, long worldDay) {
-        if (!isActive(pokemon) || isAchieved(pokemon) || pokemon.entity == null) return;
+        if (!isActive(pokemon) || isAchieved(pokemon) || pokemon.getEntity() == null) return;
         NbtCompound d = data(pokemon);
         long last = d.getLong(LAST_DAY);
         if (last < 0L) {
@@ -56,7 +56,7 @@ public final class BondData {
             d.putInt(DAYS_OUT, days);
             d.putLong(LAST_DAY, worldDay);
         }
-        if (pokemon.friendship >= 255) d.putBoolean(FRIENDSHIP_DONE, true);
+        if (pokemon.getFriendship() >= 255) d.putBoolean(FRIENDSHIP_DONE, true);
         checkAchievement(pokemon);
     }
 
@@ -70,13 +70,13 @@ public final class BondData {
 
     private static void checkAchievement(Pokemon pokemon) {
         NbtCompound d = data(pokemon);
-        if (!d.getBoolean(FRIENDSHIP_DONE) && pokemon.friendship >= 255) d.putBoolean(FRIENDSHIP_DONE, true);
+        if (!d.getBoolean(FRIENDSHIP_DONE) && pokemon.getFriendship() >= 255) d.putBoolean(FRIENDSHIP_DONE, true);
         if (d.getBoolean(FRIENDSHIP_DONE) && d.getInt(DEFEATED) >= 1000 && d.getInt(DAYS_OUT) >= 50) {
             if (!d.getBoolean(ACHIEVED)) {
                 d.putBoolean(ACHIEVED, true);
                 pokemon.onChange();
-                if (pokemon.entity != null) {
-                    pokemon.entity.sendMessage(net.minecraft.text.Text.literal("§6Bond achievement complete! Evolution is unlocked."));
+                if (pokemon.getEntity() != null) {
+                    pokemon.getEntity().sendMessage(net.minecraft.text.Text.literal("§6Bond achievement complete! Evolution is unlocked."));
                 }
             }
         }
