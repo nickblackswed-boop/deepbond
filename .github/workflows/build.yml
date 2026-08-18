@@ -22,8 +22,8 @@ jobs:
         with:
           gradle-version: '8.11'
 
-      - name: Build
-        run: gradle build --no-daemon
+      - name: Clean and build
+        run: gradle clean build --no-daemon
 
       - name: Upload jar
         uses: actions/upload-artifact@v4
